@@ -43,6 +43,7 @@
 #include <scsi.h>
 #include <serial.h>
 #include <spi.h>
+#include <spi_flash.h>
 #include <stdio_dev.h>
 #include <trace.h>
 #include <watchdog.h>
@@ -415,6 +416,17 @@ static int initr_dataflash(void)
 }
 #endif
 
+#if defined(CONFIG_SPI_FLASH) && defined(CONFIG_SPI_FLASH_MTD) && defined(CONFIG_ENV_IS_IN_UBI)
+static int initr_spiflash(void)
+{
+        spi_flash_probe(CONFIG_SF_DEFAULT_BUS,
+			CONFIG_SF_DEFAULT_CS,
+			CONFIG_SF_DEFAULT_SPEED,
+			CONFIG_SF_DEFAULT_MODE);
+        return 0;
+}
+#endif
+	   
 /*
  * Tell if it's OK to load the environment early in boot.
  *
@@ -787,7 +799,10 @@ init_fnc_t init_sequence_r[] = {
 #ifdef CONFIG_HAS_DATAFLASH
 	initr_dataflash,
 #endif
-	initr_env,
+#if defined(CONFIG_SPI_FLASH) && defined(CONFIG_SPI_FLASH_MTD) && defined(CONFIG_ENV_IS_IN_UBI)
+        initr_spiflash,
+#endif
+        initr_env,
 #ifdef CONFIG_SYS_BOOTPARAMS_LEN
 	initr_malloc_bootparams,
 #endif
