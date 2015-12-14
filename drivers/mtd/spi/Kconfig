@@ -45,7 +45,7 @@ config SPI_FLASH_BAR
 config SPI_FLASH_USE_4K_SECTORS
 	bool "Use small 4096 B erase sectors"
 	depends on SPI_FLASH
-	default y
+	default n
 	help
 	  Many flash memories support erasing small (4096 B) sectors. Depending
 	  on the usage this feature may provide performance gain in comparison
