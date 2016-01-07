@@ -1035,4 +1035,8 @@ static inline int idx2vol_id(const struct ubi_device *ubi, int idx)
 		return idx;
 }
 
+#ifdef __UBOOT__
+int do_work(struct ubi_device *ubi);
+#endif
+
 #endif /* !__UBI_UBI_H__ */

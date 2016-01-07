@@ -1064,8 +1064,16 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num,
 	 */
 	spin_lock(&ubi->wl_lock);
 	ubi->thread_enabled = 1;
+#ifndef __UBOOT__
 	wake_up_process(ubi->bgt_thread);
-	spin_unlock(&ubi->wl_lock);
+#else
+        err = do_work(ubi);
+        if (err) {
+	   ubi_err("%s: work failed with error code %d",
+		   ubi->bgt_name, err);
+	}
+#endif
+        spin_unlock(&ubi->wl_lock);
 
 	ubi_devices[ubi_num] = ubi;
 	ubi_notify_all(ubi, UBI_VOLUME_ADDED, NULL);

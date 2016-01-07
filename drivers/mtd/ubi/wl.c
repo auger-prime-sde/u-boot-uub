@@ -214,7 +214,11 @@ static void wl_tree_add(struct ubi_wl_entry *e, struct rb_root *root)
  * This function returns zero in case of success and a negative error code in
  * case of failure.
  */
+#ifndef __UBOOT__
 static int do_work(struct ubi_device *ubi)
+#else
+int do_work(struct ubi_device *ubi)
+#endif
 {
 	int err;
 	struct ubi_work *wrk;
